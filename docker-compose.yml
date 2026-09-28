@@ -1,0 +1,30 @@
+version: '3.8' 
+
+services: 
+  mongodb: 
+    image: mongo:latest 
+    container_name: shipnow-mongodb 
+    restart: always 
+    ports: 
+      - "27017:27017" 
+    environment: 
+      MONGO_INITDB_DATABASE: shipnow 
+    volumes: 
+      - mongo_data:/data/db 
+
+  app: 
+    build: . 
+    container_name: shipnow-api 
+    restart: always 
+    ports: 
+      - "8080:8080" 
+    environment: 
+      PORT: 8080 
+      NODE_ENV: production 
+      MONGO_URI: mongodb://mongodb:27017/shipnow 
+      LOG_LEVEL: info 
+    depends_on: 
+      - mongodb 
+
+volumes: 
+  mongo_data:
